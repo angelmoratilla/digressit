@@ -15,6 +15,7 @@ jQuery.fn.highlight = function (str, className){
     
 //http://www.onlineaspect.com/2009/06/10/reading-get-variables-with-javascript/    
     
+
 // Figure out what browser is being used
 jQuery.browser = {
     version: (userAgent.match( /.+(?:rv|it|ra|ie|me)[\/: ]([\d.]+)/ ) || [])[1],
@@ -49,7 +50,11 @@ var parseGetVariables = function (variables) {
     return var_list;
 }
 
+
+
 jQuery(document).ready(function() {
+
+
 
     /*** 
      *        RENDERING PAGE
@@ -315,7 +320,7 @@ jQuery(document).ready(function() {
                 break;                
             }
         }    
-        jQuery('body').openlightbox(lightbox, null, e);
+        jQuery('body').openlightbox(lightbox);
 
     });
     
@@ -463,7 +468,6 @@ jQuery(document).ready(function() {
     
     AjaxResult.add_comment = function(data) {
         var result_id = parseInt(data.message.comment_ID);
-        var confirmation_lightbox = 'lightbox-submit-comment-success';
 
         if(data.status == 0){
             jQuery('body').displayerrorslightbox(data);
@@ -505,8 +509,6 @@ jQuery(document).ready(function() {
 
                 jQuery('#'+comment_id).fadeIn();
                 jQuery('#commentbox').scrollTo('#'+comment_id , 500, {easing:'easeOutBack'});
-                
-                confirmation_lightbox = 'lightbox-submit-reply-success';
 
             }
             else{
@@ -519,6 +521,7 @@ jQuery(document).ready(function() {
                     jQuery('#' + parent_id).after('<ul class="children">' + new_comment + '</ul>');                    
                     jQuery('#'+comment_id).fadeIn("#"+comment_id);
                 }
+
             }
         }
         /* new thread */
@@ -536,11 +539,7 @@ jQuery(document).ready(function() {
 
         }
 
-        // RY We want to show the buttons, so this should be removed. The buttons aren't there yet, though.
         jQuery('#'+comment_id + ' .comment-buttons').hide();
-        
-        jQuery('.new_comment').removeClass('new_comment');
-        jQuery('#'+comment_id).addClass('new_comment');
 
         //var current_count = parseInt(jQuery(jQuery('#content .commentcount').get((selected_paragraph_number ))).html());
         jQuery(jQuery('#content .commentcount').get((selected_paragraph_number -1 ))).html(data.message.paragraph_comment_count);
@@ -558,7 +557,7 @@ jQuery(document).ready(function() {
         
         jQuery.fn.showCommentBoxCommentState();
     
-        jQuery('body').openlightbox(confirmation_lightbox);
+        jQuery('body').openlightbox('lightbox-submit-comment-success');
         
         return;
     }
@@ -605,7 +604,7 @@ jQuery(document).ready(function() {
                 var dynamic_call = 'typeof(AjaxResult.' + function_name + ') != "undefined"';
 
                 if(eval(dynamic_call)){
-                    eval('AjaxResult.' + function_name + '(data, e);');
+                    eval('AjaxResult.' + function_name + '(data);');
                 }
                 else{
                     
@@ -662,7 +661,7 @@ jQuery(document).ready(function() {
 
                     var dynamic_call = 'typeof(AjaxResult.' + function_name + ') != "undefined"';
                     if(eval(dynamic_call)){
-                        eval('AjaxResult.' + function_name + '(data, e);');
+                        eval('AjaxResult.' + function_name + '(data);');
                     }
                     else{
 
@@ -707,7 +706,7 @@ jQuery(document).ready(function() {
 
                     var dynamic_call = 'typeof(AjaxResult.' + function_name + ') != "undefined"';
                     if(eval(dynamic_call)){
-                        eval('AjaxResult.' + function_name + '(data, e);');
+                        eval('AjaxResult.' + function_name + '(data);');
                     }
                     else{
 
@@ -763,7 +762,7 @@ jQuery(document).ready(function() {
 
                 var dynamic_call = 'typeof(AjaxResult.' + function_name + ') != "undefined"';
                 if(eval(dynamic_call)){
-                    eval('AjaxResult.' + function_name + '(data, e);');
+                    eval('AjaxResult.' + function_name + '(data);');
                 }
                 else{
                     
@@ -802,7 +801,7 @@ jQuery(document).ready(function() {
 
                 var dynamic_call = 'typeof(AjaxResult.' + function_name + ') != "undefined"';
                 if(eval(dynamic_call)){
-                    eval('AjaxResult.' + function_name + '(data, e);');
+                    eval('AjaxResult.' + function_name + '(data);');
                 }
                 else{
                     
@@ -856,7 +855,7 @@ jQuery(document).ready(function() {
                 jQuery('.loading, .loading-bars, .loading-bar, .loading-throbber').hide();
                 var dynamic_call = 'typeof(AjaxResult.' + function_name + ') != "undefined"';
                 if(eval(dynamic_call)){
-                    eval('AjaxResult.' + function_name + '(data, e);');
+                    eval('AjaxResult.' + function_name + '(data);');
                 }
                 else{
                     
@@ -1405,13 +1404,14 @@ jQuery(document).ready(function() {
     jQuery('.paragraph-block-button').live('click', function(e){
         var paragraphnumber = parseInt(jQuery('.paragraph-block-button').index(this));
         var selected_paragraphnumber = parseInt(jQuery('#selected_paragraph_number').val());
-        jQuery('.selected-paragraph-block').removeClass('selected-paragraph-block');                    
+        //jQuery('#paragraph-block-' + paragraphnumber).addClass('selected-paragraph-block');                    
         
         if(paragraphnumber > 0 && paragraphnumber == selected_paragraphnumber){
             jQuery('.comment').hide();
             jQuery('#respond').hide();
             jQuery('.textblock').removeClass('selected-textblock')
-                                .removeAttr('tabindex');              
+                                .removeAttr('tabindex');    
+            jQuery('.paragraph-block').removeClass('selected-paragraph-block');            
             jQuery('#selected_paragraph_number').val(0);
             jQuery('#commentbox').scrollTo(0 , 500, {easing:'easeOutBack'});
 
@@ -1815,12 +1815,10 @@ jQuery.fn.extend({
 });
 
 
-jQuery.fn.openlightbox = function (lightbox, params, event){
+jQuery.fn.openlightbox = function (lightbox, params){
     
-    var lightboxData = jQuery('.' + lightbox).attr('data');
-    
-    if (typeof lightboxData !== 'undefined') {
-        params = jQuery.extend(params, { data : lightboxData });        
+    if(typeof(jQuery('.' + lightbox).attr('data')) !== 'undefined'){
+        var params = {data : jQuery('.' + lightbox).attr('data')};
     }
 
     if(isNaN(lightbox)){
@@ -1830,15 +1828,15 @@ jQuery.fn.openlightbox = function (lightbox, params, event){
                 var function_name,
                     dynamic_call;
 
-                if (data && parseInt(data.status) == 1) {             
-                    jQuery.fn.load_in_lightbox(data, event);
+                if (data && parseInt(data.status) == 1) {                    
+                    jQuery.fn.load_in_lightbox(data);
         
                     function_name = lightbox.replace(/-/g, '_');// + "_ajax_result";
 
                     dynamic_call = 'typeof(AjaxResult.' + function_name + ') != "undefined"';
                     
                     if (eval(dynamic_call)) { 
-                        eval('AjaxResult.' + function_name + '(data, event);');
+                        eval('AjaxResult.' + function_name + '(data);');
                     }
                 }        
             }, 'json' );
@@ -1847,22 +1845,17 @@ jQuery.fn.openlightbox = function (lightbox, params, event){
     }
 }
 
-jQuery.fn.closelightbox = function () {
+jQuery.fn.closelightbox = function (){
     
-    // Get this before it's removed from the DOM
-    var focusSelector = jQuery('.lightbox-content').attr('data-focus-on-close'),
-        lightboxContent = jQuery('#lightbox-content'),
-        lightboxTrigger = lightboxContent.data('trigger');
-
-    lightboxContent.fadeOut()
-                   .html('');
-                                                 
+    jQuery('#lightbox-content').fadeOut()
+                               .html('');
+                               
     jQuery('#lightbox-transparency').css('width', 0)
                                     .css('height', 0)
                                     .removeClass('enabled');
                                     
     document.location.hash = '';
-
+    
     // Restore original tabindex value to page elements
     jQuery('#wrapper *').each(function(index, element) {
         var el = jQuery(element),
@@ -1876,34 +1869,7 @@ jQuery.fn.closelightbox = function () {
     // console.log("number of elements with tabindex after closing lightbox: "
     //             + jQuery('[tabindex]').length);
     // console.log(jQuery('[tabindex]'));
-        
-
-    // Tried this as callback to fadeOut(), but that creates a small lag. 
-    // This is smoother.
-    jQuery.fn.assignFocusOnLightboxClose(focusSelector, lightboxTrigger);
-    
 }
-
-jQuery.fn.assignFocusOnLightboxClose = function(focusSelector, lightboxTrigger) {
-
-    var focus;
-        
-    // Use a lightbox-specific element if specified
-    if ( typeof focusSelector !== 'undefined' ) {
-        focus = jQuery(focusSelector).not(':hidden').first();
-    // Otherwise use the element that triggered the lightbox event
-    } else if ( typeof lightboxTrigger !== 'undefined' ) {
-        focus = jQuery(lightboxTrigger);
-    } 
-    
-    // Default to first h1 on the page, if none of the above are defined or exist
-    if ( typeof focus === 'undefined' || !focus.length ) {
-        focus = jQuery('h1').not(':hidden').first();
-    }
-    
-    jQuery.fn.assignFocus(focus);
- 
-};
 
 jQuery.fn.displayerrorslightbox = function (data){
     if(data.status == 0){
@@ -1913,12 +1879,11 @@ jQuery.fn.displayerrorslightbox = function (data){
     }
 }
 
-jQuery.fn.load_in_lightbox = function (data, event){
+jQuery.fn.load_in_lightbox = function (data){
     
     var wrapper, 
         wrapperElements,
         lightboxContent,
-        eventTarget,
         lightboxWidth,
         innerContent,
         innerWidth,
@@ -1946,27 +1911,7 @@ jQuery.fn.load_in_lightbox = function (data, event){
         // console.log("number of elements with tabindex after setting to -1: " + jQuery('[tabindex]').length); 
 
         lightboxContent = jQuery('#lightbox-content');
-        if (lightboxContent.attr('style')) {
-            lightboxContent.attr('style', '');
-        }
         lightboxContent.hide();
-        
-        // Remember the event target that triggered the lightbox
-        if (typeof event !== 'undefined' && event) { 
-            /* NB event.currentTarget is the element the event is bound to.
-             * event.target is the element that received the event - so possibly
-             * a descendant of currentTarget. We want to return focus to the
-             * element bound to the event, not one of its children.
-             */ 
-            eventTarget = event.currentTarget; 
-            /* Not if the target is in the lightbox (e.g., the "lost password" link
-             * on the sign in form is the trigger for the lost password lightbox).
-             * We should keep the trigger assigned when the first lightbox opened.
-             */
-            if ( ! jQuery(eventTarget).parents('#lightbox-content').length ) {
-                lightboxContent.data('trigger', event.currentTarget);
-            }
-        }
                 
         browser_width = jQuery(window).width();
         browser_height = jQuery(window).height();
@@ -1990,34 +1935,32 @@ jQuery.fn.load_in_lightbox = function (data, event){
         
         if (innerContent.length) {
             if (innerContent.css('width').length) {
-            // add 80px padding
-            innerWidth = parseInt(innerContent.css('width')) + 80;
+               // add 80px padding
+               innerWidth = parseInt(innerContent.css('width')) + 80;
             }
         }
                
         lightboxWidth = parseInt(lightboxContent.width());
         if (lightboxWidth < innerWidth) {
-            lightboxWidth = innerWidth;
+                lightboxWidth = innerWidth;
         }
 
+                
         //lightboxContent.css('left', (browser_width - lightboxContent.width()) /2 )
         //               .css('top', '10%')
-        lightboxContent
-            .css('margin', '0 auto')
-            .css('position','relative')
-            .css('width', lightboxWidth + 'px')
-            .css('top',(scroll_top + (browser_height*.1)))
-            .fadeIn('slow', function() {
-                jQuery.fn.assignLightboxFocus(this);
-            });
-        
+        lightboxContent.css('margin', '0 auto')
+                       .css('width', lightboxWidth + 'px')
+                       .css('top',(scroll_top + (browser_height*.1)))
+                       .fadeIn('slow', function() {
+              jQuery.fn.assignLightboxFocus(this);                                        
+        });
         
         if (lightboxContent.find('.lightbox-delay-close').length) {
             //document.location.hash = '';
 
             timeout = setTimeout(function() {
                 jQuery("body").closelightbox();
-                }, 2000); // increased delay for accessibility; was 1000
+                }, 3000); // increased delay for accessibility; was 1000
             jQuery(this).data('timeout', timeout);          
         }
     }
@@ -2056,7 +1999,7 @@ jQuery.fn.assignLightboxFocus = function(lightboxElement) {
     if (!focus.length) {
         legend = lightbox.find('legend:first');
         // Assign the legend a tabindex, else it can't receive focus.
-        legend.attr('tabindex', '0');
+        legend.attr('tabindex', '1');
         focus = legend;
     }                       
     
@@ -2095,42 +2038,5 @@ jQuery.fn.enableCommentFormButtons = function() {
                                    .prop('disabled', false);   
 }
 
-/*
- * focus is a jQuery object or a jQuery selector
- */
-jQuery.fn.assignFocus = function(focus) {
-    
-    var tabIndex, 
-        addedTabIndex;
-    
-    if (typeof focus === 'string') {
-        focus = jQuery(focus);
-    } else if (! focus instanceof jQuery) {
-        return;
-    }
-    
-    if (focus.length) {
-    
-        tabIndex = focus.attr('tabindex');
-        // tabindex < 0 is for IE: elements with negative tabindex can't receive focus.
-        // In Firefox and Chrome, any element with positive, negative, or 0 tabindex value
-        // can receive focus, so we wouldn't need to do it for negative values.
-        if (typeof tabIndex === 'undefined' || tabIndex < 0) {
-            addedTabIndex = true;
-            // Assign a tabindex value, else the element can't take focus
-            focus.attr('tabindex', 0);
-        }
-        focus.focus();   
 
-        // After assigning focus, remove an added tabindex value
-        if (addedTabIndex) {
-            if (typeof tabIndex === 'undefined') {
-                focus.removeAttr('tabindex');
-            // or restore a negative tabindex value
-            } else {
-                focus.attr('tabindex', tabIndex);
-            } 
-        } 
-    } 
-}
 

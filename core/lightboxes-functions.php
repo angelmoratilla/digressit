@@ -1,8 +1,10 @@
 <?php
+
+
 add_action('public_ajax_function', 'lightbox_login_ajax');
 add_action('public_ajax_function', 'lightbox_login_success_ajax');
 
-add_filter('digressit_lightbox_close_mechanism', 'digressit_lightbox_close_mechanism');
+
 /**
  *
  */
@@ -109,8 +111,8 @@ function lightbox_login_ajax(){
                 <span class="loading-bars"></span>
                 
                 <div class="lightbox_buttons">
-                    <input type="button" class="lightbox-close" value="Cancel" />
                     <input type="submit" id="login-submit" class="lightbox-submit lightbox-button disabled" disabled='disabled' value="<?php _e('Sign in'); ?>">            
+                    <input type="button" class="lightbox-close" value="Cancel" />
                 </div>
             
             </form>
@@ -133,10 +135,10 @@ function lightbox_login_success_ajax(){
     if(is_user_logged_in()): 
         $status  = 1;
     ?>
-        <div class="lightbox-content center" id="lightbox-login-success" data-focus-on-close="#signout-link">
+        <div class="lightbox-content center" id="lightbox-login-success">
             <h3 tabindex="0"><?php _e('Sign In Successful'); ?></h3>
             
-            <?php echo apply_filters('digressit_lightbox_close_mechanism') ?>  
+            <?php echo get_lightbox_close_mechanism() ?>  
             
         </div><?php 
     else:
@@ -146,11 +148,37 @@ function lightbox_login_success_ajax(){
 }
 
 
-/* Provide a mechanism for closing an informational lightbox (i.e., one that doesn't contain
- * a form that needs to be submitted). jQuery fadeout is triggered by the presence of the span.
+/**
+ *
  */
-function digressit_lightbox_close_mechanism() {
-    return '<span class="lightbox-delay-close"></span>';     
+function lightbox_submit_comment_success_ajax(){
+    start_lightbox('Lightbox: Comment Success');
+    ?>
+        <div class="lightbox-content center" id="lightbox-submit-comment-success">
+            <h3 tabindex="0"><?php _e('Comment saved.  Thank you for your comment.'); ?></h3>
+            
+            <?php echo get_lightbox_close_mechanism() ?> 
+            
+        </div>
+	<?php 
+    end_lightbox(1);
+}
+
+/* Provide a mechanism for closing an informational lightbox (i.e., one that doesn't contain
+ * a form that needs to be submitted). Previous behavior was the auto fadeout, but this
+ * poses accessibility problems, so switch to a close button for now. Defining a method allows
+ * us to switch the behavior across the site.
+ */
+function get_lightbox_close_mechanism($buttonText = 'OK') {
+    $html = <<< EOT
+        <div class="lightbox_buttons">                          
+            <input type="button" class="lightbox-close" value="$buttonText" /> 
+        </div>  
+EOT;
+        /*
+        <span class="lightbox-delay-close"></span>
+        */
+    return $html;      
 }
 
 ?>
