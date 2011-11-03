@@ -271,13 +271,9 @@ div.bubble cite.rounded {
 /*	padding: 25px 50px 25px 40px; */
 	background-color: #f4f8f8;
 	border: 6px solid white;
-	-moz-box-shadow: 0 0 1em #afafaf;
+	 -moz-box-shadow: 0 0 1em #afafaf;
 	-webkit-box-shadow: 0 0 1em #afafaf;	
 
-}
-
-.lightbox-content.center, #lightbox-content .center {
-    text-align: center;
 }
 
 .error, .error a{
@@ -474,6 +470,15 @@ a:hover{
 .comment .comment-sticky{
 	background-color: transparent;
 }
+
+
+.lightbox-register:hover{
+	text-decoration: underline;
+}
+.lightbox-reset-password:hover{
+	text-decoration: underline;
+}
+
 
 
 #lightbox-moderator-log {
@@ -1384,12 +1389,6 @@ img{
 	position:absolute;
 	top:0;
 	width:80px;
-}
-
-
-.digressit_type{
-	width: 50%;
-	margin-left: 15px;
 }
 
 
