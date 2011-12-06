@@ -1190,10 +1190,6 @@ function frontpage_load(){
 	if(digressit_is_frontpage()){
 		add_action('add_dynamic_widget', 'frontpage_sidebar_widgets');
 	}
-	add_action('wp_print_scripts',  'digressit_core_print_scripts', 1);
-	add_action('wp_print_styles',  'digressit_core_print_styles', 1) ; 		
-	add_action('wp_head',  'digressit_wp_head') ; 		
-	
 }
 
 
@@ -1308,10 +1304,9 @@ function digressit_core_print_scripts(){
 	if(!is_admin()){
 		?>
 <script type='text/javascript'>	
-var siteurl = '<?php echo site_url(); ?>';
+var siteurl = '<?php echo get_root_domain(); ?>';
 var baseurl = '<?php echo get_root_domain(); ?>';
-var is_multisite = <?php echo is_multisite(); ?>;
-var siteurlpath = '<?php echo is_multisite() ? network_site_url() : site_url(); ?>';
+var siteurlpath = '<?php echo site_url(); ?>';
 
 var user_ID =  <?php echo $current_user->ID; ?>;
 var post_ID = <?php echo isset($post->ID) ? $post->ID : 0 ?>;

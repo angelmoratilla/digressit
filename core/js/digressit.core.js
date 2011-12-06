@@ -459,9 +459,19 @@ jQuery(document).ready(function() {
      *        AJAX RESPONSES -
      *
      *        
-     */
+     */ 
     
+    /*
+    This allows the digressit add_comment method to be extended
+    by another plugin:
     AjaxResult.add_comment = function(data) {
+        AjaxResult.digressit_add_comment(data);
+        // plugin specific code here
+    }  
+    */     
+    AjaxResult.add_comment = AjaxResult.digressit_add_comment;
+      
+    AjaxResult.digressit_add_comment = function(data) {
         var result_id = parseInt(data.message.comment_ID);
         var confirmation_lightbox = 'lightbox-submit-comment-success';
 
@@ -558,7 +568,7 @@ jQuery(document).ready(function() {
         
         jQuery.fn.showCommentBoxCommentState();
     
-//        jQuery('body').openlightbox(confirmation_lightbox);
+        jQuery('body').openlightbox(confirmation_lightbox);
         
         return;
     }
@@ -931,20 +941,6 @@ jQuery(document).ready(function() {
     jQuery("#search_context").change(function (e) {        
         jQuery("#searchform").attr('action', jQuery("#search_context option:selected").val());
     });
-
-
-	/* this is required in the standard digress.it install. in #RR it's not. this code should 
-	be merged and there should be a way to this functionality */
-    jQuery('#comment').focus(function(){
-        var focus = setTimeout(function() {
-           jQuery.fn.enableCommentFormButtons();
-        }, 200);
-                
-    });
-
-    if(jQuery('#wpadminbar').length){
-        jQuery('#header').css('margin-top', '35px');
-    }
    
     function handlePaginationClick(new_page_index, pagination_container) {
         // This selects 20 elements from a content array
@@ -1758,7 +1754,7 @@ jQuery.fn.extend({
         var browser_height = jQuery(window).height();
         var content_height = jQuery('#content').height();
         var default_top = parseInt(jQuery('#content').position().top);
-        var scroll_top =  parseInt(jQuery(window).scrollTop());
+        var scroll_top =  default_top  + parseInt(jQuery(window).scrollTop());
         var lock_position = jQuery('#content').offset().top;
         
         
@@ -1780,32 +1776,24 @@ jQuery.fn.extend({
             return;
         }
     
-//        console.log(scroll_top + ' ' + lock_position);
         
+            
         //top of page
         if(scroll_top > lock_position && jQuery("#commentbox").css('position') != 'fixed' ){
             var left = parseInt(jQuery('#content').offset().left) + 565  ;            
-            jQuery("#commentbox, #commentbox-header, #dynamic-sidebar").css('position', 'fixed');
+            jQuery("#commentbox, #commentbox-header").css('position', 'fixed');
             jQuery("#commentbox, #commentbox-header").css('left', left + 'px');
             jQuery("#commentbox-header").css('top', '0px');
             jQuery("#commentbox").css('top',  parseInt(jQuery('#wpadminbar').outerHeight()) +  parseInt(jQuery('#commentbox-header').outerHeight()) + 5 + 'px');
             jQuery("#commentbox").css('height', '90%');
-
-            jQuery("#dynamic-sidebar").css('top',  parseInt(jQuery('#wpadminbar').outerHeight()) +  parseInt(jQuery('#commentbox-header').outerHeight()) + 5 + 'px');
-            jQuery("#dynamic-sidebar").css('height', '90%');
-//            console.log('fixed');
-
             
         }    
         else if(scroll_top < lock_position && jQuery("#commentbox").css('position') != 'absolute' ){
-            jQuery("#commentbox, #commentbox-header, #dynamic-sidebar").css('position', 'absolute');
+            jQuery("#commentbox, #commentbox-header").css('position', 'absolute');
             jQuery("#commentbox, #commentbox-header").css('left', '565px'    );
             jQuery("#commentbox-header").css('top', '0px' );
             jQuery("#commentbox").css('top', parseInt(jQuery('#commentbox-header').top) + parseInt(jQuery('#commentbox-header').outerHeight()) + 'px');
             jQuery("#commentbox").css('height', jQuery(window).height() - 250 + 'px');
-
-            jQuery("#dynamic-sidebar").css('top', parseInt(jQuery('header').outerHeight()));
-
         }
     
         //bottom of page
