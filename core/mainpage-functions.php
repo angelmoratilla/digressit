@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  */
@@ -35,18 +36,12 @@ function digressit_mainpage_default_menu(){
 
 	 <?php
 	 
-	if($digressit_options['front_page_menu'] == 'pages'){
+	 if($digressit_options['front_page_menu'] == 'pages'){
 		$frontpage_posts =  get_pages( $args );
-	}
-	else if($digressit_options['front_page_menu'] == ('custom')){
-		$frontpage_posts = get_posts('post_type=digressit_type&numberposts=-1&orderby='.$digressit_options['front_page_order_by'].'&order=' . $digressit_options['front_page_order']);		
-	}
-	else{
+	 }
+	 else{
 		$frontpage_posts = get_posts('numberposts=-1&orderby='.$digressit_options['front_page_order_by'].'&order=' . $digressit_options['front_page_order']);
 	}
-	
-//	var_dump(get_posts('post_type=digressit_type'));
-	
 
 	foreach($frontpage_posts as $pp){
 		$comment_count = digressit_get_post_comment_count($pp->ID, null, null, null); ?>
