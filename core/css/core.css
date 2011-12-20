@@ -1028,24 +1028,8 @@ img{
 	position: relative;
 	margin: 0 auto;
 	left: 0;
-	top: 0;
 }
 
-#wrapper{
-	background:transparent #F5F8F8;
-	margin:0 auto;
-	min-height:100%;
-	position:absolute;
-	overflow: visible;
-}
-
-#wpadminbar .ab-top-menu a{
-	color: #CCCCCC !important;
-}
-
-.paragraph-block-button:hover{
-	cursor: pointer;
-}
 
 #content{
 	background-color: white;
@@ -1113,6 +1097,12 @@ img{
 
 .embedcode{
 	display:none; 
+}
+#wrapper{
+	background:transparent #F5F8F8;
+	margin:0 auto;
+	min-height:100%;
+	position:absolute;
 }
 
 
@@ -1231,10 +1221,6 @@ img{
 	background-color: white;
 	height: 100%;
 	z-index: 1000;
-}
-
-#dynamic-sidebar{
-	padding: 0;
 }
 
 
@@ -1915,8 +1901,3 @@ img{
     height:1px;
     overflow:hidden; 
 } 
-
-
-#wpadminbar > span{
-	margin: 0 !important;
-}
