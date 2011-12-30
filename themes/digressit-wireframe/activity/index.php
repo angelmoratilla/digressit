@@ -1,16 +1,8 @@
-<?php
-/**
- * @package Digressit
- * @subpackage Digressit_Wireframe
- * This is automatically generated for BuddyPress
- */
-?>
-
 <?php get_header() ?>
 
 	<div id="container">
 		<div id="content">
-
+hello!!
 			<?php if ( !is_user_logged_in() ) : ?>
 				<h3><?php _e( 'Site Activity', 'buddypress' ) ?></h3>
 			<?php endif; ?>
