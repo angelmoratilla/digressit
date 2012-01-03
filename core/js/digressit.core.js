@@ -26,7 +26,6 @@ jQuery.browser = {
 };
 
 
-//IE does not play nice with html5 tags. use JS 
 if(jQuery.browser.msie){
     (function(){
         var html5elmeents = "address|article|aside|audio|canvas|command|datalist|details|dialog|figure|figcaption|footer|header|hgroup|keygen|mark|meter|menu|nav|progress|ruby|section|time|video".split('|');    
@@ -52,15 +51,18 @@ var parseGetVariables = function (variables) {
 
 jQuery(document).ready(function() {
 
-    /*
-     * RENDERING PAGE
+    /*** 
+     *        RENDERING PAGE
      *
+     *        
      */
+
     if(typeof digressit_enabled != 'undefined' && digressit_enabled){
         jQuery('#commentbox').position_main_elements();
     }
     
-    jQuery(window).scroll(function () {
+    jQuery(window).scroll(function () { 
+    
         //this should not fire every single time! do proper checks to help performance
         if(digressit_enabled){
             jQuery('#commentbox').position_main_elements();
@@ -69,24 +71,25 @@ jQuery(document).ready(function() {
         
     });
 
+    var id;
     jQuery(window).resize(function(){
         if(digressit_enabled){
-            jQuery('#commentbox').position_main_elements();            
+            //jQuery('#commentbox').position_main_elements();            
             //console.log('resize');
+            clearTimeout(id);
+            id = setTimeout(doneResizing, 100);
         }
     });
     
-	jQuery('#comment').data('label', jQuery('#comment').val());
-	jQuery('#user_email').data('label', jQuery('#user_email').val());
-	jQuery('#display_name').data('label', jQuery('#display_name').val());
-
-
+    function doneResizing(){
+        jQuery('#commentbox').position_main_elements();
+    }
     
-    
-    /*
-     * BIND USER EVENTS
+    /*** 
+     *        USER INTERACTION
      *
-     */	
+     *        
+     */
     // Paragraph embeds
     jQuery('.paragraphembed a').bind('click', function(e){
         e.preventDefault();
@@ -106,7 +109,7 @@ jQuery(document).ready(function() {
     });
     
     jQuery('.submit, .lightbox-submit').click(function(e){
-//        document.location.hash = '';
+        document.location.hash = '';
         if(jQuery(e.target).hasClass('ajax')){
             //return false;
         }
@@ -463,15 +466,6 @@ jQuery(document).ready(function() {
      *        
      */ 
     
-    /*
-    This allows the digressit add_comment method to be extended
-    by another plugin:
-    AjaxResult.add_comment = function(data) {
-        AjaxResult.digressit_add_comment(data);
-        // plugin specific code here
-    }  
-    */     
-      
     AjaxResult.digressit_add_comment = function(data) {
         var result_id = parseInt(data.message.comment_ID);
         var confirmation_lightbox = 'lightbox-submit-comment-success';
@@ -564,20 +558,25 @@ jQuery(document).ready(function() {
         jQuery(jQuery('#digress-it-list-posts .sidebar-current .commentcount').get(0)).html(data.message.comment_count);
         jQuery(jQuery('#digress-it-list-posts .sidebar-current .commentcount').get(0)).fadeIn('slow');
 
-        jQuery('#comment').val('');  
-        jQuery('#comment').val(	jQuery('#comment').data('label'));
-      
+        jQuery('#comment').val('');        
         jQuery('#comment_parent').val(0);
         
         jQuery.fn.showCommentBoxCommentState();
     
-//        jQuery('body').openlightbox(confirmation_lightbox);
+        jQuery('body').openlightbox(confirmation_lightbox);
         
         return;
     }
     
-    AjaxResult.add_comment = AjaxResult.digressit_add_comment;
-
+    /*
+    This allows the digressit add_comment method to be extended
+    by another plugin.
+    AjaxResult.add_comment = function(data) {
+        AjaxResult.digressit_add_comment(data);
+        // plugin specific code would go here
+    }  
+    */ 
+    AjaxResult.add_comment = AjaxResult.digressit_add_comment; 
 
     /*** 
      *        AJAX FUNCTIONS
@@ -599,14 +598,7 @@ jQuery(document).ready(function() {
         var function_name = form_id;
         var form_class = jQuery(form).attr('class');
         var fields = {};
-        var form_data = jQuery("#"+form_id).serialize();
 
-		/* 
-			DATA VALIDATION REQUIRED 
-			maybe call something like?
-			AjaxDataValidate.add_comment?
-		
-		*/
         
         jQuery('input[type=button]').prop('disabled', true)
                                     .addClass('disabled');             
@@ -619,7 +611,7 @@ jQuery(document).ready(function() {
         
         jQuery('form #' + form_id + ' .loading,' + '#' + form_id + ' .loading-bars, ' + '#' + form_id + ' . loading-bar , #' + form_id + ' .loading-throbber').css('display', 'inline');
         
-        jQuery.post( siteurl + "/ajax/" + form_id +'/',    form_data,
+        jQuery.post( siteurl + "/ajax/" + form_id +'/',    jQuery("#"+form_id).serialize(),
             function( data ) {    
                 
                 function_name = function_name.replace(/-/g, '_');// + "_ajax_result";
@@ -953,12 +945,6 @@ jQuery(document).ready(function() {
     jQuery("#search_context").change(function (e) {        
         jQuery("#searchform").attr('action', jQuery("#search_context option:selected").val());
     });
-
-
-
-    if(jQuery('#wpadminbar').length){
-        jQuery('#header').css('margin-top', '35px');
-    }
    
     function handlePaginationClick(new_page_index, pagination_container) {
         // This selects 20 elements from a content array
@@ -1085,70 +1071,57 @@ jQuery(document).ready(function() {
     */
 
 
-
-	/* this is required in the standard digress.it install. in #RR it's not. this code should 
-	be merged and there should be a way to this functionality */
     jQuery("#comment").focus(function (e) {
-        if( jQuery(this).val() == jQuery('#comment').data('label')){
+
+
+        jQuery("#submit-comment").show();
+
+        //jQuery("#cancel-response").show();
+
+        jQuery(".comment").removeClass('selected');
+        //jQuery("#comment_parent").val('0');
+
+
+
+    });
+
+    jQuery("#comment").focus(function (e) {
+        if( jQuery(this).val() == 'Click here to add a new comment...'){
             jQuery(this).val('');
             /* Causes incorrect behavior: buttons should be enabled only if a section is selected.
             jQuery.fn.enableCommentFormButtons();      */    
         }
-
-        jQuery("#submit-comment").show();
-        jQuery(".comment").removeClass('selected');
-
-        var focus = setTimeout(function() {
-           jQuery.fn.enableCommentFormButtons();
-        }, 200);
     });
-    jQuery("#comment").blur(function (e) {
-        if( jQuery(this).val() == ''){
-            jQuery('#submit-comment').addClass('disabled');
-            jQuery(this).val(jQuery('#comment').data('label'));
-        }
-    });
-
 
     jQuery("#user_email").focus(function (e) {
-        if( jQuery(this).val() == jQuery('#user_email').data('label')){
+        if( jQuery(this).val() == 'Email'){
             jQuery(this).val('');
         }
     });
-    jQuery("#user_email").blur(function (e) {
-        if( jQuery(this).val() == ''){
-            jQuery(this).val(	jQuery('#user_email').data('label'));
-        }
-    });
-
-
 
     jQuery("#display_name").focus(function (e) {
-        if( jQuery(this).val() == jQuery('#display_name').data('label')){
+        if( jQuery(this).val() == 'Your Name'){
             jQuery(this).val('');
         }
     });
-    jQuery("#display_name").blur(function (e) {
-        if( jQuery(this).val() == ''){
-            jQuery(this).val(	jQuery('#display_name').data('label'));
-        }
-    });
 
 
-/*
     jQuery("#comment").keypress(function (e) {
 
 
-        if(jQuery("#comment").val().length > 1){
-            jQuery('#submit-comment').removeClass('disabled');
+        if(jQuery("#comment").val().length > 10){
+
+            //jQuery('#submit-comment').removeClass('disabled');
+
         }
         else{
-            jQuery('#submit-comment').addClass('disabled');
+
+            //jQuery('#submit-comment').addClass('disabled');
         }
 
 
     });
-*/
+
     function isNumber(n) {
       return !isNaN(parseFloat(n)) && isFinite(n);
     }
@@ -1271,10 +1244,7 @@ jQuery(document).ready(function() {
 
         jQuery("#menu ul li").click(function (e) {
             jQuery('#comment_parent').val(0);
-	        jQuery('#comment').val(	jQuery('#comment').data('label'));
-
-
-//            jQuery('#comment').val('Click here add a new comment...');
+            jQuery('#comment').val('Click here add a new comment...');
 
             jQuery('#submit-comment').hide();
 //            jQuery('#cancel-response').hide();
@@ -1301,6 +1271,7 @@ jQuery(document).ready(function() {
                     jQuery.copy(jQuery(jQuery(e.target)[0]).text());
                     jQuery('.text-copied').fadeIn('slow');
                     jQuery('.text-copied').fadeOut('slow');
+
                     return;
                 }
                 else if(jQuery(e.target).hasClass('embedcode')){
@@ -1343,7 +1314,7 @@ jQuery(document).ready(function() {
                     jQuery('#respond').appendTo(jQuery('#toplevel-commentbox'));                        
                 }
                 jQuery('#commentbox').scrollTo(0 , 500, {easing:'easeOutBack'});                
-                document.location.hash = '';
+                document.location.hash = '#';
 
             }
     
@@ -1732,8 +1703,8 @@ jQuery(document).ready(function() {
                 var left = textblock.position().left;
                 top = textblock.position().top;
 
-            }
-
+            }            
+            
             var commentbox = jQuery("#commentbox");
 
             var scrollto = ((top - 100) > 0)  ? (top - 100) : 0;
@@ -1772,90 +1743,98 @@ jQuery(document).ready(function() {
 });
 
 
-
-jQuery.fn.extend({    
-
-    position_main_elements: function() {
+jQuery.fn.position_main_elements = function() {
         
-        if(typeof override_comment_box != 'undefined'){
-            jQuery("#commentbox").css(override_comment_box_specs);
-            return;
-                        
-        }
+    var commentBox = jQuery('#commentbox'),
+        commentBoxHeader = jQuery('#commentbox-header'),
+        dynamicSidebar = jQuery('#dynamic-sidebar'),
+        content = jQuery('#content'),
+        browser_width,
+        browser_height,
+        content_height,
+        default_top,
+        scroll_top,
+        lock_position,
+        left,
+        styles;
+        
+    if (typeof override_comment_box !== 'undefined') {
+        commentBox.css(override_comment_box_specs);
+        return;                 
+    }
+
+    browser_width = jQuery(window).width();
+    browser_height = jQuery(window).height();
+    content_height = content.height();
+    default_top = parseInt(content.position().top);
+    scroll_top =  default_top  + parseInt(jQuery(window).scrollTop());
+    lock_position = content.offset().top;
+        
+    //console.log(scroll_top + ' - '+ lock_position+"\n");
     
-        var browser_width = jQuery(window).width();
-        var browser_height = jQuery(window).height();
-        var content_height = jQuery('#content').height();
-        var default_top = parseInt(jQuery('#content').position().top);
-        var scroll_top =  parseInt(jQuery(window).scrollTop());
-        var lock_position = jQuery('#content').offset().top;
-        var sidebar_lock_position = jQuery('header').outerHeight();
+    //iOS
+    if (iOS) {
+  
+        styles = { 'position' : 'absolute',
+                   'top' : (scroll_top < 360) ? 260: (scroll_top - 100) };
+                   
+        commentBoxHeader.css(styles);                        
+        commentBox.css(styles);        
+        dynamicSidebar.css(styles);                
         
-		//console.log(scroll_top);
+        return;
+    }
+
+    //top of page
+    if (scroll_top > lock_position && commentBox.css('position') !== 'fixed' ) {
         
-        //console.log(scroll_top + ' - '+ lock_position+"\n");
-        //iOS
-
-        if(iOS){
-            var ipad_scroll_top_position = (scroll_top < 360) ? 260: (scroll_top - 100) ;
-
-            jQuery("#commentbox-header").css('position',  'absolute');            
-            jQuery("#commentbox-header").css('top', ipad_scroll_top_position);            
-
-            jQuery("#commentbox").css('position',  'absolute');            
-            jQuery("#commentbox").css('top', ipad_scroll_top_position);
-            
-            jQuery("#dynamic-sidebar").css('position',  'absolute');            
-            jQuery("#dynamic-sidebar").css('top',  ipad_scroll_top_position);                
-            
-            return;
-        }
-    
-//        console.log(scroll_top + ' ' + lock_position);
+        left = parseInt(content.offset().left) + 565;      
+              
+        styles = { 'position' : 'fixed',
+                   'left' : left + 'px' };
+                   
+        commentBoxHeader.css(styles)
+                        .css('top', '0px');
         
-        //top of page
-        if(scroll_top > lock_position && jQuery("#commentbox").css('position') != 'fixed' ){
-            var left = parseInt(jQuery('#content').offset().left) + 565  ;            
-            jQuery("#commentbox, #commentbox-header, #dynamic-sidebar").css('position', 'fixed');
-            jQuery("#commentbox, #commentbox-header").css('left', left + 'px');
-            jQuery("#commentbox-header").css('top', '0px');
-            jQuery("#commentbox").css('top',  parseInt(jQuery('#wpadminbar').outerHeight()) +  parseInt(jQuery('#commentbox-header').outerHeight()) + 5 + 'px');
-            jQuery("#commentbox").css('height', '90%');            
-        }    
-        else if(scroll_top < lock_position && jQuery("#commentbox").css('position') != 'absolute' ){
-            jQuery("#commentbox, #commentbox-header, #dynamic-sidebar").css('position', 'absolute');
-            jQuery("#commentbox, #commentbox-header").css('left', '565px'    );
-            jQuery("#commentbox-header").css('top', '0px' );
-            jQuery("#commentbox").css('top', parseInt(jQuery('#commentbox-header').top) + parseInt(jQuery('#commentbox-header').outerHeight()) + 'px');
-            jQuery("#commentbox").css('height', jQuery(window).height() - 250 + 'px');
-        }
+        commentBox.css(styles)
+                  .css('top',  parseInt(jQuery('#wpadminbar').outerHeight()) +  parseInt(commentBox.outerHeight()) + 5 + 'px')
+                  .css('height', '90%');
+                  
+    } else if (scroll_top < lock_position && commentBox.css('position') !== 'absolute') {
+        
+        styles = { 'position' : 'absolute',
+                   'left' : '565px' };
+                   
+        commentBoxHeader.css(styles)
+                        .css('top', '0px' );
+        
+        commentBox.css(styles)
+                  .css('top', parseInt(commentBoxHeader.top) + parseInt(commentBoxHeader.outerHeight()) + 'px')
+                  .css('height', jQuery(window).height() - 250 + 'px');
+                  
+    } else if (commentBox.css('position') !== 'absolute') {
+        
+        left = parseInt(content.offset().left) + 565; 
+        
+        styles = { 'position' : 'fixed',
+                   'left' : left + 'px' };
+                   
+        commentBox.css(styles);                    
+        commentBoxHeader.css(styles);
+    }
 
-
-        if(scroll_top > sidebar_lock_position && jQuery("#dynamic-sidebar").css('position') != 'fixed' ){
-            jQuery("#dynamic-sidebar").css('position', 'fixed');
-            jQuery("#dynamic-sidebar").css('top',  parseInt(jQuery('#wpadminbar').outerHeight()) + 'px');
-            jQuery("#dynamic-sidebar").css('height', '90%');            
-        }    
-        else if(scroll_top < sidebar_lock_position && jQuery("#dynamic-sidebar").css('position') != 'absolute' ){
-            jQuery("#dynamic-sidebar").css('position', 'absolute');
-			var position_of_sidebar = (sidebar_lock_position + parseInt(jQuery('#wpadminbar').outerHeight()));
-            jQuery("#dynamic-sidebar").css('top',  position_of_sidebar + 'px');
-
-        }
-
-    
-        //bottom of page
-        if(scroll_top > (content_height - ((browser_height/2)+20)) && jQuery("#commentbox").css('position') == 'fixed'){
-            jQuery("#commentbox").css('height', '78%');
-            jQuery("#commentbox").addClass('resized');
-        }
-        else if(scroll_top < (content_height - ((browser_height/2)+20)) && jQuery("#commentbox").hasClass('resized')){
-            jQuery("#commentbox").css('height', '90%');            
-            jQuery("#commentbox").removeClass('resized');
-        }
+    //bottom of page
+    if (scroll_top > (content_height - ((browser_height/2)+20)) && commentBox.css('position') === 'fixed') {
+        
+        commentBox.css('height', '78%')
+                  .addClass('resized');
+                  
+    } else if (scroll_top < (content_height - ((browser_height/2)+20)) && commentBox.hasClass('resized')) {
+        
+        commentBox.css('height', '90%')           
+                  .removeClass('resized');
     }    
-    
-});
+};    
 
 
 jQuery.fn.openlightbox = function (lightbox, params, event){
