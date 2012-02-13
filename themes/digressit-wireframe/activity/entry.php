@@ -1,11 +1,3 @@
-<?php
-/**
- * @package Digressit
- * @subpackage Digressit_Wireframe
- * This is automatically generated for BuddyPress
- */
-?>
-
 <?php /* This template is used by activity-loop.php and AJAX functions to show each activity */ ?>
 
 <?php do_action( 'bp_before_activity_entry' ) ?>
