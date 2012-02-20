@@ -62,8 +62,6 @@ body{
 }
 */
 
-
-
 .search-result{
     border-color: -moz-use-text-color #AAAAAA #AAAAAA;
     border-right: 1px solid #AAAAAA;
@@ -196,7 +194,6 @@ h1, h2, h3, h4, h5, h6{
 	width: 55%;
 }
 
-/*
 .lightbox-close-icon{
 	background:url("images/close.png") no-repeat scroll center center #409DD7;
 	height:0;
@@ -211,7 +208,6 @@ h1, h2, h3, h4, h5, h6{
 	-webkit-box-shadow:1px 2px 3px #AAAAAA;
 	box-shadow: 1px 2px 3px #AAAAAA;
 }
-*/
 
 #live-content-search, #live-comment-search, .search-result{
 	width: 150px;
@@ -274,7 +270,7 @@ h4 {
 
 
 .page{
-/*	padding: 10px 20px; */
+
 }
 
 
@@ -282,10 +278,6 @@ h4 {
 	height:auto;
 	min-height:50px;
 	
-}
-
-#submit-comment{
-	text-transform: capitalize;
 }
 
 
@@ -301,7 +293,6 @@ h4 {
 
 #respond{
 	text-align: center;
-	
 }
 
 #comments-sort-all{
@@ -329,22 +320,10 @@ h4 {
 }
 
 .lightbox-close{
-/*
 	background-image:url("images/close-icon.png");
 	right:-20px;
 	top:-20px;
 	padding: 17px;
-	
-*/
-	position: absolute;
-	bottom: 0;
-	left: 0;
-	top: auto;
-	width: 70px;
-}
-fieldset{
-	border: 0;
-	padding: 0;
 }
 /*
 #menu-primary{
@@ -443,34 +422,20 @@ z-index:0;
 	margin:0 auto;
 	width:1000px;
 	position: relative;
-}
 
-.error404 .the_title{
-	display: none;
-}
-.error404 #mainpage{
-	border-width: 0px 1px 0;
-	border-style: solid;
-	border-color: #BDBDBD;
-	width: 1002px;
+
+
 }
 
 .site-home #content, .frontpage #content{
 	background-color:white;
 	border-color:#BDBDBD;
 	border-style:solid;
-	border-width:0 0px;
+	border-width:0 1px;
 	margin:0 auto;
 	width:1000px;	
 	box-shadow: 0 25px 30px #AAAAAA;
 }
-
-.site-home #content{
-	border-color:#BDBDBD;
-	border-style:solid;
-	border-width: 0 1px;
-}
-
 .paragraph-block{
 }
 
@@ -622,7 +587,6 @@ p, li{
 }
 
 
-
 .frontpage #container {
 	
 	border-color:#BDBDBD;
@@ -726,7 +690,7 @@ p, li{
 
 
 
-#footer .foot > span{
+#footer .foot span{
 	margin: 20px;
 }
 
@@ -1084,16 +1048,7 @@ div#item-header{
 	text-align:auto;
 }
 
-.submit{
-	border: 0;
-}
 
-
-
-
-#wpadminbar .ab-wp-logo{
-	margin: 0 !important;
-}
 
 /* =Menu
 -------------------------------------------------------------- */
@@ -1217,14 +1172,23 @@ div#item-header{
 }
 
 .mu_register input[type=submit]{
+	width: 50% !important;
 	position: relative !important;
 }
 
 
 .mu_register .submit {
-
-
-	
+	background: none !important;
+	color: black !important;
+	font-size: auto !important;
+	font-weight: normal !important;
+	letter-spacing: auto !important;
+	padding: auto !important;
+	position:relative !important;
+	right: auto !important;
+	left: 0 !important;
+	text-align: left !important;
+	-moz-box-shadow: none!important;
 }
 
 .site-home #content, .frontpage #content{

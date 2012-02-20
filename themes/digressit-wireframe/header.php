@@ -3,7 +3,7 @@
 <html <?php language_attributes(); ?>>
 <head profile="http://gmpg.org/xfn/11">
 <meta http-equiv="Content-Type" content="<?php bloginfo('html_type'); ?>; charset=<?php bloginfo('charset'); ?>" />
-<title><?php wp_title('&laquo;', true, 'right'); ?> <?php bloginfo('name'); ?></title>
+<title><?php wp_title(''); ?></title>
 <link rel="pingback" href="<?php bloginfo('pingback_url'); ?>" />
 <?php get_currentuserinfo(); ?>
 <?php wp_head(); ?>
@@ -98,5 +98,4 @@ if(function_exists('digressit_body_class')){
 <?php
 do_action('secondary_menu');
 ?>
-
-<a id="startcontent"></a>
+<a id="startcontent" tabindex="0"></a>
