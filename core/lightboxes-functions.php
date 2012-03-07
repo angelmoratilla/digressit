@@ -3,9 +3,8 @@ add_action('public_ajax_function', 'lightbox_login_ajax');
 add_action('public_ajax_function', 'lightbox_login_success_ajax');
 
 add_filter('digressit_lightbox_close_mechanism', 'digressit_lightbox_close_mechanism');
-
 /**
- * This gets called in the footer of the theme once. This 
+ *
  */
 function get_lightboxes(){
     ?>
@@ -15,9 +14,6 @@ function get_lightboxes(){
     do_action('add_lightbox');
 }
 
-/**
- *
- */
 function start_lightbox($lightbox_name = 'Lightbox: Generic'){
     global $blog_id;
     ob_start();
@@ -26,9 +22,6 @@ function start_lightbox($lightbox_name = 'Lightbox: Generic'){
     echo '<span class="hidden-offscreen"> Beginning of dialog content </span>';
 }
 
-/**
- *
- */
 function end_lightbox($status = 1){
     //This is for accessibility support
     echo '<span class="hidden-offscreen"> End of dialog content </span>';
@@ -38,9 +31,6 @@ function end_lightbox($status = 1){
     die(json_encode(array('status' => $status, "message" => $html)) );    
 }
 
-/**
- *
- */
 function lightbox_login_ajax(){ 
     start_lightbox('Lightbox: Login');    
     global $password_just_reset;
@@ -101,15 +91,6 @@ function lightbox_login_ajax(){
                     <label for="user_pass"><?php _e('Password'); ?></label><br />
                     <input type="password" name="pwd" id="user_pass" class="input required" value="" size="25" />
                 </p>
-            
-                <div class="custom_register_links">
-                <?php if(has_action('custom_register_links')) :?>
-                    <p><?php do_action('custom_register_links'); ?></p>
-                <?php else: /* Applies only to digressit, not regulation room, so leaving non-accessible markup for now. */ ?>                    
-                    <p class="register-account-link">New user? <a href="<?php echo get_bloginfo('home'); ?>/wp-signup.php"  title="<?php _e('Create an account if you are a new user'); ?>"><?php _e('Create an account'); ?></a></p>
-                    <p class="lost-password-link"><a href="<?php echo wp_login_url(); ?>?action=lostpassword" title="<?php _e('Reset your password if you have lost it'); ?>"><?php _e('Lost Password?'); ?></a></p>
-                <?php endif; ?>
-                </div>
         
                 <input type="hidden" name="wp-submit" value="Log In" id="wp-submit">
                 <input type="hidden" name="redirect_to" value="<?php echo $_REQUEST['data']; ?>#login-success" /> 

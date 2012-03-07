@@ -1,9 +1,3 @@
-<?php
-/**
- * @package Digressit
- * @subpackage Digressit_Wireframe
- */
-?>
 <footer id="footer" role="complementary">	
 	<div class="foot">
 	<?php if(has_action('custom_footer')): ?>
@@ -22,5 +16,13 @@
 </div> <!-- wrapper -->
 
 <?php get_lightboxes(); ?>
+
+<?php 
+    // Print script elements containing content, not src value, that need to be placed at the end of the body.
+    if (has_action('custom_final_scripts')) {
+        do_action('custom_final_scripts');
+    }
+?>
+
 </body>
 </html> 
