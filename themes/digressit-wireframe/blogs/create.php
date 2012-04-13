@@ -1,10 +1,3 @@
-<?php
-/**
- * @package Digressit
- * @subpackage Digressit_Wireframe
- * This is automatically generated for BuddyPress
- */
-?>
 <?php get_header() ?>
 
 	<?php do_action( 'bp_before_create_blog_content' ) ?>
@@ -14,7 +7,7 @@
 
 		<?php do_action( 'template_notices' ) ?>
 
-		<h3><?php _e( 'Create a Blog', 'buddypress' ) ?> &nbsp;<a class="button" href="<?php echo bp_get_root_domain() . '/' . BP_BLOGS_SLUG . '/' ?>"><?php _e( 'Blogs Directory', 'buddypress' ) ?></a></h3>
+		<h3><?php _e( 'Create a Blog', 'buddypress' ) ?> &nbsp;<a class="button" href="<?php echo bp_get_root_url() . '/' . BP_BLOGS_SLUG . '/' ?>"><?php _e( 'Blogs Directory', 'buddypress' ) ?></a></h3>
 
 		<?php do_action( 'bp_before_create_blog_content' ) ?>
 
