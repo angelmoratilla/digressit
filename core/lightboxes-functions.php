@@ -3,9 +3,8 @@ add_action('public_ajax_function', 'lightbox_login_ajax');
 add_action('public_ajax_function', 'lightbox_login_success_ajax');
 
 add_filter('digressit_lightbox_close_mechanism', 'digressit_lightbox_close_mechanism');
-
 /**
- * This gets called in the footer of the theme once. This 
+ *
  */
 function get_lightboxes(){
     ?>
@@ -15,9 +14,6 @@ function get_lightboxes(){
     do_action('add_lightbox');
 }
 
-/**
- *
- */
 function start_lightbox($lightbox_name = 'Lightbox: Generic'){
     global $blog_id;
     ob_start();
@@ -26,10 +22,7 @@ function start_lightbox($lightbox_name = 'Lightbox: Generic'){
     echo '<span class="hidden-offscreen"> Beginning of dialog content </span>';
 }
 
-/**
- *
- */
-function end_lightbox($status = 1){
+function end_lightbox($status = 1, $lightbox_name = 'Lighbox: Generic'){
     //This is for accessibility support
     echo '<span class="hidden-offscreen"> End of dialog content </span>';
     do_action('digressit_end_lightbox', $lightbox_name);
@@ -38,9 +31,6 @@ function end_lightbox($status = 1){
     die(json_encode(array('status' => $status, "message" => $html)) );    
 }
 
-/**
- *
- */
 function lightbox_login_ajax(){ 
     start_lightbox('Lightbox: Login');    
     global $password_just_reset;
@@ -91,7 +81,7 @@ function lightbox_login_ajax(){
                 <?php if(has_action('social_functions_signin')) :?>
                     <?php do_action('social_functions_signin'); ?>
                 <?php endif; ?>
-                
+
                 <p>
                     <label for="user_login"><?php _e('Username'); ?></label><br />
                     <input type="text" name="log" id="user_login" class="input required" value="" size="25" />
@@ -146,7 +136,7 @@ function lightbox_login_success_ajax(){
         <div class="lightbox-content center" id="lightbox-login-success" data-focus-on-close=".signin-signout-link">
             <h3 tabindex="0"><?php _e('Sign In Successful'); ?></h3>
             
-            <?php echo apply_filters('digressit_lightbox_close_mechanism') ?>  
+            <?php echo apply_filters('digressit_lightbox_close_mechanism', '') ?>  
             
         </div><?php 
     else:
