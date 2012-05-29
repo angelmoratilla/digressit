@@ -163,10 +163,6 @@ body.error404 {
 	padding: 5px;
 }
 
-.paragraph-block-0 .paragraph-label{
-	display: none;
-}
-
 #comments-sort-all, #no-comments{
 	display: none;
 }
@@ -410,12 +406,12 @@ div.bubble cite.rounded {
 	color: inherit;
 }
 
-
 .transparent-submit-button:hover{
 	cursor: pointer;
 }
 
 #lightbox-content input{
+	background-color:#FEFEE0;
 	color:#666666;
 	font-size:20px;
 	padding:5px;
@@ -519,14 +515,15 @@ a:hover{
 
 
 #lightbox-content input {
+	background-color: white !important;
 	font-size:15px !important;
 }
 
 
-.submit, input[type=button], input[type=submit]{
+.submit{
 	background:none repeat scroll 0 0 #409DD7;
-	color:white !important;
-	font-size:15px !important;
+	color:white;
+	font-size:12px;
 	font-weight:bold;
 	letter-spacing:1px;
 	padding:5px 10px;
@@ -534,7 +531,6 @@ a:hover{
 	right:0;
 	text-align:right;
 	font-family: Arial;
-	border: 1px solid;
 }
 
 .submit:hover{
@@ -1032,24 +1028,8 @@ img{
 	position: relative;
 	margin: 0 auto;
 	left: 0;
-	top: 0;
 }
 
-#wrapper{
-	background:transparent #F5F8F8;
-	margin:0 auto;
-	min-height:100%;
-	position:absolute;
-	overflow: visible;
-}
-
-#wpadminbar .ab-top-menu a{
-	color: #CCCCCC !important;
-}
-
-.paragraph-block-button:hover{
-	cursor: pointer;
-}
 
 #content{
 	background-color: white;
@@ -1117,6 +1097,12 @@ img{
 
 .embedcode{
 	display:none; 
+}
+#wrapper{
+	background:transparent #F5F8F8;
+	margin:0 auto;
+	min-height:100%;
+	position:absolute;
 }
 
 
@@ -1235,10 +1221,6 @@ img{
 	background-color: white;
 	height: 100%;
 	z-index: 1000;
-}
-
-#dynamic-sidebar{
-	padding: 0;
 }
 
 
@@ -1919,8 +1901,3 @@ img{
     height:1px;
     overflow:hidden; 
 } 
-
-
-#wpadminbar > span{
-	margin: 0 !important;
-}
