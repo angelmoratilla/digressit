@@ -54,6 +54,7 @@ function commentbrowser_template_redirect() {
 }
 
 /**
+ * 
  * This handles submission of comment form. 
  */
 function add_comment_ajax($request_params){
@@ -90,15 +91,15 @@ function add_comment_ajax($request_params){
     
 
     if(strlen($display_name) < 2){
-        die(json_encode(array('status' => 0, "message" => 'Please enter a valid name.')));
+        die(json_encode(array('status' => 0, "message" => 'Please enter a valid name.')));                
     }
 
     if(!is_email($user_email)){
-        die(json_encode(array('status' => 0, "message" => 'Not a valid email.')));
+        die(json_encode(array('status' => 0, "message" => 'Not a valid email.')));                
     }
 
     if(strlen($request_params['comment']) < 2){
-        die(json_encode(array('status' => 0, "message" => 'Your comment is too short.')));
+        die(json_encode(array('status' => 0, "message" => 'Your comment is too short.')));                
     }
     
     /*
@@ -118,7 +119,7 @@ function add_comment_ajax($request_params){
     $request_params['comment_ID'] = $comment_ID;
     
     
-    //@TODO: we are moving away from the extra column, in FUTURE VERSIONS we will just use comment meta
+    //TODO: we are moving away from the extra column, in FUTURE VERSIONS we will just use comment meta
     $result = $wpdb->query( $wpdb->prepare("UPDATE $wpdb->comments SET comment_text_signature = %s WHERE comment_ID = %d", $request_params['selected_paragraph_number'], $comment_ID) );
     add_metadata('post', $request_params['comment_post_ID'], 'comment_text_signature', $request_params['selected_paragraph_number'], true);
     add_metadata('comment', $comment_ID, 'paragraph', $request_params['selected_paragraph_number'], true) ;
@@ -161,7 +162,6 @@ function add_comment_ajax($request_params){
     
     die(json_encode(array('status' => $status, "message" => $message)));
 }
-
 
 /**
  *  This is how the comments are displayed. Overriding the default comments function. Includes new custom hooks for adding metadata
@@ -224,8 +224,7 @@ function standard_digressit_comment_parser($comment, $args, $depth) {
             
             
             <?php if(($depth < get_option('thread_comments_depth') || is_null($comment->comment_parent)) && (is_user_logged_in() || !get_option('comment_registration')) && is_single()): ?>
-	        <input type="button" class="comment-reply reply comment-hover small-button comment-button" title="Reply to this comment" 
-	            data="<?php comment_ID(); ?>" data-paragraph-number="<?php echo $paragraphnumber ?>" value="reply">
+                <div class="comment-reply comment-hover small-button" value="<?php comment_ID(); ?>">reply</div>
             <?php endif; ?>
 
             <?php do_action('digressit_custom_comment_footer'); ?>
@@ -242,15 +241,18 @@ function standard_digressit_comment_parser($comment, $args, $depth) {
  *  This is how the comment form will look
  */
 function digressit_comment_form(){
-    global $blog_id;
+    global $blog_id, $post;
+    
+    // This gets the value from the blog-specific options table (e.g., wp_6_options)
+    $admin_email = get_option('admin_email');
 
     ?>
-    <a class="hidden-offscreen" href="#commentformend">Skip over comment form.</a>
+    <a class="hidden-offscreen" href="#commentformend">Skip over comment form</a>
     <form method="post" action="/" id="add-comment">
 
-        <?php if(!is_user_logged_in()): ?>
+        <?php if (get_option('require_name_email') && !is_user_logged_in()): ?>
             <?php if(function_exists('display_recaptcha')):?>
-                <p><input type="text" class="comment-field-area" id="display_name"  name="author" value="Your Name" ><label for="display_name">Display Name</label><p>
+                <p><input type="text" class="comment-field-area" id="display_name"  name="author" value="Your Name" ><label for="display_name">Display Name!!!</label><p>
                 <p><input type="text" class="comment-field-area" id="user_email" name="email" value="Email"><label for="user_email">Email</label><p>
             <?php else: ?>
                 <p><input type="text" class="comment-field-area" id="display_name"  name="display_name" value="Your Name" ><label for="display_name">Display Name</label><p>
@@ -262,12 +264,12 @@ function digressit_comment_form(){
             
             <span id="comment-label-comment">
                 Enter your comment on the selected section here. If you have not selected a numbered section to comment on, 
-                you must do so before commenting. If you have trouble commenting, please <a href="mailto:regulationroom@cornell.edu">email us for technical assistance</a>.
+                you must do so before commenting. If you have trouble commenting, please <a href="mailto:<?php echo $admin_email; ?>">email us for technical assistance</a>.
             </span>
     
             <span id="comment-label-reply" style="display: none;">
                 Enter your reply to the selected comment here. 
-                If you have trouble replying, please <a href="mailto:regulationroom@cornell.edu">email us for technical assistance</a>.
+                If you have trouble replying, please <a href="mailto:<?php echo $admin_email; ?>">email us for technical assistance</a>.
             </span>
                     
         </label>
