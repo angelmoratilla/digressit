@@ -4,13 +4,12 @@ Plugin Name: Digress.it
 Plugin URI: http://digress.it
 Description:  Digress.it allows readers to comment paragraph by paragraph in the margins of a text. You can use it to comment, gloss, workshop, debate and more!
 Author: Eddie A Tejeda
-Version: 3.2-beta
+Version: 3.2 RR-5.17.0
 Author URI: http://eddietejeda.com
 License: GPLv2 (http://creativecommons.org/licenses/GPL/2.0/)
 
 Special thanks to:	
 The developers of JQuery @ www.jquery.com
-Cynthia Farina, Mary Newhart, Rebecca Younes and Brian Post @ Cornell University
 Joss Winn, Tony Hirst and Alex Bilbie @ University of Lincoln 
 Jesse Wilbur, Ben Vershbow, Dan Visel and Bob Stein @ futureofthebook.org
 
@@ -19,21 +18,21 @@ Mark James, for the famfamfam iconset @ http://www.famfamfam.com/lab/icons/silk/
 Matteo Bicocchi @ www.open-lab.com
 */
 
-global $commentbrowser, $blog_id, $current_user, $current_user_comments, $development_mode, $testing_mode, $production_mode;
+global $commentbrowser, $blog_id, $current_user, $current_user_comments;
 global $digressit_content_function, $digressit_comments_function, $digressit_commentbox_function,$is_commentbrowser, $browser;
 global $using_mainpage_nav_walker;
 
 $digressit_options = $digressit = $options = get_option('digressit');
 $is_commentbrowser= false;
-$plugin_name = str_replace('/', '', str_replace(basename( __FILE__),'',plugin_basename(__FILE__))); 
-$plugin_dir = WP_CONTENT_DIR . '/plugins/'.$plugin_name.'/';
-
+$plugin_name = str_replace("/", "", str_replace(basename( __FILE__),"",plugin_basename(__FILE__))); 
+$plugin_dir = WP_CONTENT_DIR . '/plugins/'. $plugin_name.'/';
 $plugin_theme_link = WP_CONTENT_DIR . '/plugins/'. $plugin_name.'/themes';
+
 
 load_plugin_textdomain('digressit', 'wp-content/plugins/'.dirname(plugin_basename(__FILE__)).'/languages');
 
 /* global variables */
-define("DIGRESSIT_VERSION", '3.2-beta');
+define("DIGRESSIT_VERSION", '3.2');
 define("DIGRESSIT_COMMUNITY", 'digress.it');
 define("DIGRESSIT_COMMUNITY_HOSTNAME", 'digress.it');
 define("DIGRESSIT_DIR", WP_PLUGIN_DIR ."/". $plugin_name);
@@ -62,6 +61,7 @@ $browser = digressit_current_browser();
 register_activation_hook(__FILE__,  'activate_digressit');
 register_deactivation_hook(__FILE__, 'deactivate_digressit' );
 
+
 register_theme_directory( $plugin_theme_link );
 
 
@@ -81,7 +81,6 @@ add_action('after_setup_theme', 'digressit_setup' );
 
 /* admin functions */
 add_action('admin_head-post.php', 'digressit_add_comment_change_notice');
-add_action('admin_head-edit.php', 'digressit_custom_type_notice');
 add_action('admin_menu', 'digressit_add_admin_menu');
 add_action('admin_init', 'digressit_theme_options_page_form');
 
@@ -107,6 +106,10 @@ add_action('add_commentbrowser', 'commentbrowser_general_comments');
 
 
 /* these theme files global and are always included in sub-themes */
+add_action('wp_print_scripts',  'digressit_core_print_scripts', 1);
+add_action('wp_print_styles',  'digressit_core_print_styles', 1) ; 		
+add_action('wp_head',  'digressit_wp_head') ; 		
+
 if(esc_url($digressit_options['custom_header_image'], array('http', 'https'))){
 	add_action('add_header_image', 'custom_digressit_logo');
 }
@@ -138,11 +141,14 @@ add_action('wp', 'digressit_mainpage_load');
 add_action('widgets_init', create_function('', 'return register_widget("ListPostsWithCommentCount");'));
 
 
+
+
 //load extensions
 function digressit_auto_load_dir($path){
 	if ($handle = opendir($path)) {
 		while (false !== ($file = readdir($handle))) {
 			if (!@is_dir($file) && strstr($file, '.php')) {
+//				echo $path . '/' . $file;
 				require_once($path . '/' . $file);
 			}
 		}

@@ -1,8 +1,4 @@
 <?php
-/**
- * @package Digressit
- * @subpackage Digressit_Wireframe
- */
 /*
 Template Name: Archive
 */
