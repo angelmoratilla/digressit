@@ -1,11 +1,7 @@
 <?php
-/**
- * @package Digressit
- * @subpackage Digressit_Wireframe
- */
- 
+
 /*
-Because Multi-sites have a completely different layout on the aggregate home page
+because Multi-sites have a completely different layout on the aggregate home page
 than the introduction pages to the book/course, we've changed the standard "home" and "index"
 functionality of WP.
 
@@ -18,6 +14,7 @@ want home.php to load as the MU homepage.
 We also added two new functions to determine if we are on the MU homepage. and is_frontpage();
 
 */
+
 
 
 if(digressit_is_frontpage()){

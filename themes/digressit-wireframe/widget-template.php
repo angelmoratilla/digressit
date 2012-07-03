@@ -1,8 +1,6 @@
 <?php
-/**
- * @package Digressit
- * @subpackage Digressit_Wireframe
- * Template Name: Widgets Page
+/*
+Template Name: Widgets Page
 */
 ?>
 <?php get_header(); ?>
